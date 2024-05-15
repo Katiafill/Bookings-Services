@@ -6,11 +6,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.katiafill.bookings.aircraft.exception.DatabaseException;
+import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
 import ru.katiafill.bookings.aircraft.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.aircraft.model.Aircraft;
 import ru.katiafill.bookings.aircraft.repository.AircraftRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +22,6 @@ public class AircraftServiceImpl implements AircraftService {
 
     private final AircraftRepository aircraftRepository;
     private final SeatService seatService;
-
 
     @Override
     public List<Aircraft> getAircrafts() throws DatabaseException {
@@ -39,7 +40,8 @@ public class AircraftServiceImpl implements AircraftService {
     @Override
     public Aircraft getAircraft(String id, boolean full) throws DatabaseException, ResourceNotFoundException {
         try {
-            Aircraft aircraft = aircraftRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Aircraft with code " + id + " not found."));
+            Aircraft aircraft = aircraftRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Aircraft with id=" + id + " not found."));
 
             if (full) {
                 aircraft.setSeats(seatService.getAllSeats(id));
@@ -52,9 +54,22 @@ public class AircraftServiceImpl implements AircraftService {
     }
 
     @Override
-    public Aircraft createAircraft(Aircraft aircraft) throws DatabaseException {
+    /* Сохраняем модель самолетв в БД.
+    * Если самолет с таким идентификатором существует, то выбрасываем исключение ResourceAlreadyExistsException.
+    * */
+    public Aircraft createAircraft(Aircraft aircraft) throws DatabaseException, ResourceAlreadyExistsException {
         try {
+            Optional<Aircraft> sameAircraft = aircraftRepository.findById(aircraft.getCode());
+            if (sameAircraft.isPresent()) {
+                throw new ResourceAlreadyExistsException("Aircraft with id=" + aircraft.getCode() + " already exists.");
+            }
+
             Aircraft saved = aircraftRepository.save(aircraft);
+
+            if (aircraft.getSeats() != null) {
+                seatService.addSeats(aircraft.getSeats(), aircraft.getCode());
+            }
+
             log.info("Success created aircraft with id: {}", aircraft.getCode());
             return saved;
         } catch (DataAccessException ex) {
@@ -63,8 +78,13 @@ public class AircraftServiceImpl implements AircraftService {
     }
 
     @Override
-    public Aircraft updateAircraft(Aircraft aircraft) throws DatabaseException {
+    public Aircraft updateAircraft(Aircraft aircraft) throws DatabaseException, ResourceNotFoundException {
         try {
+            Optional<Aircraft> sameAircraft = aircraftRepository.findById(aircraft.getCode());
+            if (sameAircraft.isEmpty()) {
+                throw new ResourceNotFoundException("Aircraft with id=" + aircraft.getCode() + "not found.");
+            }
+
             Aircraft saved = aircraftRepository.save(aircraft);
             log.info("Success updated aircraft with id: {}", aircraft.getCode());
             return saved;
@@ -74,8 +94,14 @@ public class AircraftServiceImpl implements AircraftService {
     }
 
     @Override
-    public void deleteAircraft(String aircraftCode) throws DatabaseException {
+    public void deleteAircraft(String aircraftCode) throws DatabaseException, ResourceNotFoundException {
         try {
+            Optional<Aircraft> sameAircraft = aircraftRepository.findById(aircraftCode);
+            if (sameAircraft.isEmpty()) {
+                throw new ResourceNotFoundException("Aircraft with id= " + aircraftCode + " not found.");
+            }
+
+            // Удалять места из БД не нежно, т.к база данных сама удалит связанные данные.
             aircraftRepository.deleteById(aircraftCode);
             log.info("Success deleted aircraft by id: {}", aircraftCode);
         } catch (DataAccessException ex) {

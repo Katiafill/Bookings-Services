@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.katiafill.bookings.aircraft.exception.DatabaseException;
+import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
 import ru.katiafill.bookings.aircraft.exception.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -27,7 +28,6 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<ResponseError> handlerDatabaseException(DatabaseException ex) {
         log.error(ex.getLocalizedMessage(), ex);
-
         return new ResponseEntity<>(new ResponseError(ex.getLocalizedMessage()), HttpStatus.OK);
     }
 
@@ -37,4 +37,12 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         log.error(ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(new ResponseError(ex.getLocalizedMessage()), HttpStatus.NOT_FOUND);
     }
+
+    // Отлавливает ошибки вида ResourceNotFoundException и упаковывает в ResponseEntity с httpStatus = 404.
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ResponseError> handlerResourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
+        log.error(ex.getLocalizedMessage(), ex);
+        return new ResponseEntity<>(new ResponseError(ex.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
+    }
+
 }

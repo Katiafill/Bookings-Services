@@ -19,7 +19,7 @@ public class AircraftController {
     }
 
     @GetMapping("/{id}")
-    public Aircraft getAircraftById(@PathVariable String id, @RequestParam(defaultValue = "false") boolean full) {
+    public Aircraft getAircraft(@PathVariable String id, @RequestParam(defaultValue = "false") boolean full) {
         return service.getAircraft(id, full);
     }
 
