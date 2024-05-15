@@ -9,6 +9,7 @@ import java.util.List;
 public interface AircraftService {
     List<Aircraft> getAircrafts() throws DatabaseException;
     Aircraft getAircraft(String id) throws DatabaseException, ResourceNotFoundException;
+    Aircraft getAircraft(String id, boolean full) throws DatabaseException, ResourceNotFoundException;
     Aircraft createAircraft(Aircraft aircraft) throws DatabaseException;
     Aircraft updateAircraft(Aircraft aircraft) throws DatabaseException;
     void deleteAircraft(String aircraftCode) throws DatabaseException;

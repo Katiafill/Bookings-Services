@@ -1,16 +1,16 @@
 package ru.katiafill.bookings.aircraft.model;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -32,4 +32,8 @@ public class Aircraft {
     // Maximal flying distance, km
     @Column(nullable = false)
     private Integer range;
+
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<Seat> seats;
 }

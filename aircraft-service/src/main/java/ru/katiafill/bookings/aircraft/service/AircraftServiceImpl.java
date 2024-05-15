@@ -19,6 +19,7 @@ import java.util.List;
 public class AircraftServiceImpl implements AircraftService {
 
     private final AircraftRepository aircraftRepository;
+    private final SeatService seatService;
 
 
     @Override
@@ -32,8 +33,19 @@ public class AircraftServiceImpl implements AircraftService {
 
     @Override
     public Aircraft getAircraft(String id) throws DatabaseException, ResourceNotFoundException {
+        return getAircraft(id, false);
+    }
+
+    @Override
+    public Aircraft getAircraft(String id, boolean full) throws DatabaseException, ResourceNotFoundException {
         try {
-            return aircraftRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Aircraft with code " + id + " not found."));
+            Aircraft aircraft = aircraftRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Aircraft with code " + id + " not found."));
+
+            if (full) {
+                aircraft.setSeats(seatService.getAllSeats(id));
+            }
+
+            return aircraft;
         } catch (DataAccessException ex) {
             throw new DatabaseException("Exception occurred when find aircraft by id: " + id, ex);
         }
