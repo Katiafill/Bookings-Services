@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/aircrafts")
+@RequestMapping("/api/aircraft")
 @AllArgsConstructor
 public class AircraftController {
     private final AircraftService service;
@@ -24,7 +24,7 @@ public class AircraftController {
 
     @GetMapping
     public List<AircraftDTO> getAircrafts() {
-        return service.findAll()
+        return service.getAircrafts()
                 .stream()
                 .map(a -> modelMapper.map(a, AircraftDTO.class)
                 ).collect(Collectors.toList());
@@ -32,47 +32,33 @@ public class AircraftController {
 
     @GetMapping("/{id}")
     public AircraftDTO getAircraftById(@PathVariable String id, @RequestParam(defaultValue = "false") boolean full) {
-        Optional<Aircraft> aircraft = service.findById(id);
-        if (aircraft.isEmpty()) {
-            return null;
-        }
+        Aircraft aircraft = service.getAircraft(id);
 
-        AircraftDTO dto = modelMapper.map(aircraft.get(), AircraftDTO.class);
+        AircraftDTO dto = modelMapper.map(aircraft, AircraftDTO.class);
 
-        if (full) {
-            List<Seat> seats = service.getAllSeats(id);
-            dto.setSeats(seats.stream().map(s -> modelMapper.map(s, SeatDTO.class)).collect(Collectors.toList()));
-        }
+//        if (full) {
+//            List<Seat> seats = service.getAllSeats(id);
+//            dto.setSeats(seats.stream().map(s -> modelMapper.map(s, SeatDTO.class)).collect(Collectors.toList()));
+//        }
 
         return dto;
-    }
-
-    @GetMapping("/{id}/seats")
-    public List<SeatDTO> getSeatsByAircraft(@PathVariable String id,
-                                            @RequestParam(required = false) FareConditions conditions) {
-        if (conditions == null) {
-            return service.getAllSeats(id)
-                    .stream()
-                    .map(s -> modelMapper.map(s, SeatDTO.class))
-                    .collect(Collectors.toList());
-        } else {
-            return service.getSeatsByFareConditions(id, conditions)
-                    .stream()
-                    .map(s -> modelMapper.map(s, SeatDTO.class))
-                    .collect(Collectors.toList());
-        }
     }
 
     @PostMapping
     public void addAircraft(@RequestBody AircraftDTO aircraft) {
         Aircraft mAircraft = modelMapper.map(aircraft, Aircraft.class);
 
-        service.save(mAircraft);
+        service.createAircraft(mAircraft);
+    }
+
+    @PutMapping
+    public void updateAircraft(@RequestBody AircraftDTO aircraftDTO) {
+        service.updateAircraft(modelMapper.map(aircraftDTO, Aircraft.class));
     }
 
     @DeleteMapping("/{id}")
     public void deleteAircraft(@PathVariable String id) {
-        service.delete(id);
+        service.deleteAircraft(id);
     }
 
 }
