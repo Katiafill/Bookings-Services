@@ -1,0 +1,3 @@
+rootProject.name = 'bookings-services'
+include 'aircraft-service'
+
