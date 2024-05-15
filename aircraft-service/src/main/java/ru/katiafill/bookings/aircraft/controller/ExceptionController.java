@@ -3,9 +3,7 @@ package ru.katiafill.bookings.aircraft.controller;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,23 +23,29 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         private String message;
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseError> handlerException(Exception ex, WebRequest request) {
+        log.error(ex.getLocalizedMessage(), ex);
+        return new ResponseEntity<>(new ResponseError(ex.getLocalizedMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<ResponseError> handlerDatabaseException(DatabaseException ex) {
-        log.error(ex.getLocalizedMessage(), ex);
+        //log.error(ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(new ResponseError(ex.getLocalizedMessage()), HttpStatus.OK);
     }
 
     // Отлавливает ошибки вида ResourceNotFoundException и упаковывает в ResponseEntity с httpStatus = 404.
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ResponseError> handlerResourceNotFoundException(ResourceNotFoundException ex) {
-        log.error(ex.getLocalizedMessage(), ex);
+        //log.error(ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(new ResponseError(ex.getLocalizedMessage()), HttpStatus.NOT_FOUND);
     }
 
     // Отлавливает ошибки вида ResourceNotFoundException и упаковывает в ResponseEntity с httpStatus = 404.
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<ResponseError> handlerResourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
-        log.error(ex.getLocalizedMessage(), ex);
+        //log.error(ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(new ResponseError(ex.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
     }
 

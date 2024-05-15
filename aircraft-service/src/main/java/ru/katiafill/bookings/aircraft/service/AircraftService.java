@@ -8,12 +8,12 @@ import ru.katiafill.bookings.aircraft.model.Aircraft;
 import java.util.List;
 
 public interface AircraftService {
-    List<Aircraft> getAircrafts() throws DatabaseException;
-    Aircraft getAircraft(String id) throws DatabaseException, ResourceNotFoundException;
-    Aircraft getAircraft(String id, boolean full) throws DatabaseException, ResourceNotFoundException;
-    Aircraft createAircraft(Aircraft aircraft) throws DatabaseException, ResourceAlreadyExistsException;
-    Aircraft updateAircraft(Aircraft aircraft) throws DatabaseException, ResourceNotFoundException;
-    void deleteAircraft(String aircraftCode) throws DatabaseException, ResourceNotFoundException;
+    List<Aircraft> getAircrafts();
+    Aircraft getAircraft(String id) throws ResourceNotFoundException;
+    Aircraft getAircraft(String id, boolean full) throws ResourceNotFoundException;
+    Aircraft createAircraft(Aircraft aircraft) throws ResourceAlreadyExistsException;
+    Aircraft updateAircraft(Aircraft aircraft) throws ResourceNotFoundException;
+    void deleteAircraft(String aircraftCode) throws ResourceNotFoundException;
 
 
 }
