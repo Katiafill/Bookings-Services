@@ -24,4 +24,24 @@ public class AircraftSeatsController {
             return service.getSeatsByFareConditions(id, conditions);
         }
     }
+
+    @GetMapping("/{seatNo}")
+    public Seat getSeat(@PathVariable String id, String seatNo) {
+        return service.getSeat(id, seatNo);
+    }
+
+    @PostMapping
+    public List<Seat> addSeats(@PathVariable String id, @RequestBody List<Seat> seats) {
+        return service.addSeats(seats, id);
+    }
+
+    @PutMapping
+    public List<Seat> updateSeats(@PathVariable String id, @RequestBody List<Seat> seats) {
+        return service.updateSeats(seats, id);
+    }
+
+    @DeleteMapping
+    public void deleteSeats(@PathVariable String id, @RequestBody List<Seat> seats) {
+        service.deleteSeats(seats, id);
+    }
 }

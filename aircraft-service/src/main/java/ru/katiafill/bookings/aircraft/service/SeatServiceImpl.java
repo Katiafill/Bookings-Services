@@ -2,11 +2,10 @@ package ru.katiafill.bookings.aircraft.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.katiafill.bookings.aircraft.exception.DatabaseException;
 import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
+import ru.katiafill.bookings.aircraft.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.aircraft.model.FareConditions;
 import ru.katiafill.bookings.aircraft.model.Seat;
 import ru.katiafill.bookings.aircraft.repository.SeatRepository;
@@ -23,25 +22,25 @@ public class SeatServiceImpl implements SeatService {
     private final SeatRepository seatRepository;
 
     @Override
-    public List<Seat> getAllSeats(String aircraftCode) throws DatabaseException {
-        try {
-            return seatRepository.findAllByAircraftCode(aircraftCode);
-        } catch (DataAccessException ex) {
-            throw new DatabaseException("Exception occurred when find all seats for aircraft: " + aircraftCode, ex);
-        }
+    public Seat getSeat(String aircraftCode, String seatNo) throws ResourceNotFoundException {
+        return seatRepository.findById(new Seat.SeatPK(aircraftCode, seatNo))
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Seat at aircraft id=" + aircraftCode +
+                                " and seatNo=" + seatNo + " not found."));
     }
 
     @Override
-    public List<Seat> getSeatsByFareConditions(String aircraftCode, FareConditions conditions) throws DatabaseException {
-        try {
-            return seatRepository.findAllByAircraftCodeAndFareConditions(aircraftCode, conditions);
-        } catch (DataAccessException ex) {
-            throw new DatabaseException("Exception occurred when find all seats for aircraft: " + aircraftCode + ", conditions: " + conditions, ex);
-        }
+    public List<Seat> getAllSeats(String aircraftCode) {
+        return seatRepository.findAllByAircraftCode(aircraftCode);
     }
 
     @Override
-    public Map<FareConditions, List<String>> getGroupedSeats(String aircraftCode) throws DatabaseException {
+    public List<Seat> getSeatsByFareConditions(String aircraftCode, FareConditions conditions) {
+        return seatRepository.findAllByAircraftCodeAndFareConditions(aircraftCode, conditions);
+    }
+
+    @Override
+    public Map<FareConditions, List<String>> getGroupedSeats(String aircraftCode) {
         List<Seat> seats = getAllSeats(aircraftCode);
 
         return seats.stream()
@@ -50,7 +49,8 @@ public class SeatServiceImpl implements SeatService {
     }
 
     @Override
-    public List<Seat> addSeats(List<Seat> seats, String aircraftCode) {
+    public List<Seat> addSeats(List<Seat> seats, String aircraftCode) throws ResourceAlreadyExistsException {
+        // Проверку на наличие такого самолета проведет сама БД по первичному ключу.
         if (seats.isEmpty()) {
             return List.of();
         }
@@ -79,6 +79,7 @@ public class SeatServiceImpl implements SeatService {
     // текущие обновляются,
     // если не содержит мест, которые есть, то те удаляются.
     public List<Seat> updateSeats(List<Seat> seats, String aircraftCode) {
+        // Проверку на наличие такого самолета проведет сама БД по первичному ключу.
         // Установим всем идентификатор самолета.
         seats.forEach(s -> s.setAircraftCode(aircraftCode));
 
@@ -95,6 +96,8 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public void deleteSeats(List<Seat> seats, String aircraftCode) {
+        // Если такой записи нет, то ничего не удалит.
+        // Нужно ли сообщать об этом пользователю?
         seats.forEach(s -> s.setAircraftCode(aircraftCode));
         seatRepository.deleteAll(seats);
     }
