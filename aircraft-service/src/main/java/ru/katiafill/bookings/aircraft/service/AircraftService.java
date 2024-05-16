@@ -1,6 +1,5 @@
 package ru.katiafill.bookings.aircraft.service;
 
-import ru.katiafill.bookings.aircraft.exception.DatabaseException;
 import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
 import ru.katiafill.bookings.aircraft.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.aircraft.model.Aircraft;

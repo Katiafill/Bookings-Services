@@ -56,7 +56,7 @@ public class AircraftServiceImpl implements AircraftService {
         Aircraft saved = aircraftRepository.save(aircraft);
 
         if (aircraft.getSeats() != null) {
-            seatService.addSeats(aircraft.getSeats(), aircraft.getCode());
+            saved.setSeats(seatService.addSeats(aircraft.getSeats(), aircraft.getCode()));
         }
 
         return saved;
@@ -69,7 +69,13 @@ public class AircraftServiceImpl implements AircraftService {
                 throw new ResourceNotFoundException("Aircraft with id=" + aircraft.getCode() + "not found.");
             }
 
-            return aircraftRepository.save(aircraft);
+        Aircraft saved = aircraftRepository.save(aircraft);
+
+        if (aircraft.getSeats() != null) {
+            saved.setSeats(seatService.updateSeats(aircraft.getSeats(), aircraft.getCode()));
+        }
+
+        return saved;
     }
 
     @Override

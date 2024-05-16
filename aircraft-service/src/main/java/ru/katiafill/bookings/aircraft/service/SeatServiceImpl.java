@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.katiafill.bookings.aircraft.exception.DatabaseException;
+import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
 import ru.katiafill.bookings.aircraft.model.FareConditions;
 import ru.katiafill.bookings.aircraft.model.Seat;
 import ru.katiafill.bookings.aircraft.repository.SeatRepository;
@@ -48,46 +49,53 @@ public class SeatServiceImpl implements SeatService {
                         Collectors.mapping(Seat::getSeatNo, Collectors.toList())));
     }
 
-    @Transactional
     @Override
-    public void addSeats(List<Seat> seats, String aircraftCode) throws DatabaseException {
+    public List<Seat> addSeats(List<Seat> seats, String aircraftCode) {
         if (seats.isEmpty()) {
-            return;
+            return List.of();
         }
+
         // Установим всем идентификатор самолета.
         seats.forEach(s -> s.setAircraftCode(aircraftCode));
 
-        try {
-            // Найдем, есть ли такие места в базе.
-            List<Seat> allSeats = seatRepository.findAllById(seats
-                    .stream()
-                    .map(s -> new Seat.SeatPK(s.getAircraftCode(), s.getSeatNo()))
-                    .collect(Collectors.toList()));
+        // Найдем, есть ли такие места в базе.
+        List<Seat> allSeats = seatRepository.findAllById(seats
+                .stream()
+                .map(s -> new Seat.SeatPK(s.getAircraftCode(), s.getSeatNo()))
+                .collect(Collectors.toList()));
 
-            // Если хоть что-то уже создано, то откатываемся, и ничего не сохраняем.
-            if (allSeats.isEmpty()) {
-                seatRepository.saveAll(seats);
-            } else {
-                throw new DatabaseException("Exception occurred when save new seats for aircraft " + aircraftCode + ".\n" +
-                        "Current seats already saved: " + allSeats);
-            }
-        } catch (DataAccessException ex) {
-            throw new DatabaseException("Exception occurred when insert seats for aircraft " + aircraftCode, ex);
+        // Если хоть что-то уже создано, то откатываемся, и ничего не сохраняем.
+        if (!allSeats.isEmpty()) {
+            throw new ResourceAlreadyExistsException("Seats for aircraft id=" + aircraftCode +
+                    "already exist: " + allSeats);
         }
+
+        return seatRepository.saveAll(seats);
     }
 
     @Override
-    public void deleteSeats(List<Seat> seats, String aircraftCode) throws DatabaseException {
-        if (seats.isEmpty()) {
-            return;
-        }
-
+    // Метод для обновления списка мест у самолета.
+    // Если в списке новые места, они добавляются,
+    // текущие обновляются,
+    // если не содержит мест, которые есть, то те удаляются.
+    public List<Seat> updateSeats(List<Seat> seats, String aircraftCode) {
+        // Установим всем идентификатор самолета.
         seats.forEach(s -> s.setAircraftCode(aircraftCode));
 
-        try {
-            seatRepository.deleteAll(seats);
-        } catch (DataAccessException ex) {
-            throw new DatabaseException("Exception occurred when delete seats for aircraft " + aircraftCode, ex);
-        }
+        // Получим все места, которые сохранены для этого самолета.
+        List<Seat> allSeats = seatRepository.findAllByAircraftCode(aircraftCode);
+
+        // Отберем те места, которых нет в обновленном списке, и удалим их из БД.
+        List<Seat> toDeleteSeats = allSeats.stream().filter(s -> !seats.contains(s)).toList();
+        deleteSeats(toDeleteSeats, aircraftCode);
+
+        // Сохраним новые места и измененные в БД.
+        return seatRepository.saveAll(seats);
+    }
+
+    @Override
+    public void deleteSeats(List<Seat> seats, String aircraftCode) {
+        seats.forEach(s -> s.setAircraftCode(aircraftCode));
+        seatRepository.deleteAll(seats);
     }
 }

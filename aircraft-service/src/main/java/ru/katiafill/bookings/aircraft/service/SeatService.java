@@ -8,11 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface SeatService {
-    List<Seat> getAllSeats(String aircraftCode) throws DatabaseException;
-    List<Seat> getSeatsByFareConditions(String aircraftCode, FareConditions conditions) throws DatabaseException;
+    List<Seat> getAllSeats(String aircraftCode);
+    List<Seat> getSeatsByFareConditions(String aircraftCode, FareConditions conditions);
     /* Получить места для лайнера, сгруппированные по классам обслуживания.*/
-    Map<FareConditions, List<String>> getGroupedSeats(String aircraftCode) throws DatabaseException;
+    Map<FareConditions, List<String>> getGroupedSeats(String aircraftCode);
 
-    void addSeats(List<Seat> seats, String aircraftCode) throws DatabaseException;
-    void deleteSeats(List<Seat> seats, String aircraftCode) throws DatabaseException;
+    List<Seat> addSeats(List<Seat> seats, String aircraftCode);
+    List<Seat> updateSeats(List<Seat> seats, String aircraftCode);
+    void deleteSeats(List<Seat> seats, String aircraftCode);
 }
