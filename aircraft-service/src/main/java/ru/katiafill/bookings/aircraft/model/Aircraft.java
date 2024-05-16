@@ -25,7 +25,7 @@ public class Aircraft {
     private String code;
 
     // Aircraft model
-    @Column(nullable = false, columnDefinition = "jsonb", unique = true)
+    @Column(nullable = false, columnDefinition = "jsonb")
     @Type(JsonBinaryType.class)
     private LocalizedString model;
 

@@ -16,12 +16,12 @@ import java.io.Serializable;
 @IdClass(Seat.SeatPK.class)
 public class Seat {
     @Id
-    @Column(name = "aircraft_code", length = 3)
+    @Column(name = "aircraft_code", length = 3, nullable = false)
     @JsonIgnore
     private String aircraftCode;
 
     @Id
-    @Column(name = "seat_no", length = 4)
+    @Column(name = "seat_no", length = 4, nullable = false)
     private String seatNo;
 
     @Column(name = "fare_conditions", length = 10, nullable = false)
