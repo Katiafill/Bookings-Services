@@ -66,7 +66,7 @@ public class AircraftServiceImpl implements AircraftService {
     public Aircraft updateAircraft(Aircraft aircraft) throws ResourceNotFoundException {
             Optional<Aircraft> sameAircraft = aircraftRepository.findById(aircraft.getCode());
             if (sameAircraft.isEmpty()) {
-                throw new ResourceNotFoundException("Aircraft with id=" + aircraft.getCode() + "not found.");
+                throw new ResourceNotFoundException("Aircraft with id=" + aircraft.getCode() + " not found.");
             }
 
         Aircraft saved = aircraftRepository.save(aircraft);
@@ -82,11 +82,11 @@ public class AircraftServiceImpl implements AircraftService {
     public void deleteAircraft(String aircraftCode) throws ResourceNotFoundException {
         Optional<Aircraft> sameAircraft = aircraftRepository.findById(aircraftCode);
         if (sameAircraft.isEmpty()) {
-            throw new ResourceNotFoundException("Aircraft with id= " + aircraftCode + " not found.");
+            throw new ResourceNotFoundException("Aircraft with id=" + aircraftCode + " not found.");
         }
 
         // Удалять места из БД не нужно, т.к база данных сама удалит связанные данные.
-        aircraftRepository.deleteById(aircraftCode);
+        aircraftRepository.delete(sameAircraft.get());
     }
 
 }
