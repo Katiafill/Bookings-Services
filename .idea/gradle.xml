@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aircraft-service" />
+            <option value="$PROJECT_DIR$/airport-service" />
           </set>
         </option>
       </GradleProjectSettings>

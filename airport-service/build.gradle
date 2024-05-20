@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    alias(libs.plugins.springboot)
+    alias(libs.plugins.springDependencyManagement)
+}
+
+group = 'ru.katiafill.bookings'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(libs.starterActuator)
+    implementation(libs.starterJPA)
+    implementation(libs.starterWeb)
+    implementation(libs.starterAOP)
+    runtimeOnly(libs.database)
+    implementation(libs.hibernateUtils)
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
+    testImplementation(libs.starterTest)
+    testRuntimeOnly(libs.junit)
+}
+
+test {
+    useJUnitPlatform()
+}
