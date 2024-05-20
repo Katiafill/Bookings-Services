@@ -2,6 +2,7 @@ package ru.katiafill.bookings.airport.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.katiafill.bookings.airport.exception.ResourceAlreadyExistsException;
 import ru.katiafill.bookings.airport.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.airport.model.Airport;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class AirportServiceImpl implements AirportService {
 

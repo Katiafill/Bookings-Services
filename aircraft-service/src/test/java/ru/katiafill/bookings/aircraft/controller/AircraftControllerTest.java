@@ -39,7 +39,7 @@ class AircraftControllerTest {
     @MockBean
     private AircraftService service;
 
-    private static Aircraft aircraft;
+    private Aircraft aircraft;
 
     @BeforeEach
     void setUp() {
