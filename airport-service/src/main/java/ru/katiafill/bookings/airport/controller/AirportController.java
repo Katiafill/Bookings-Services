@@ -1,5 +1,6 @@
 package ru.katiafill.bookings.airport.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.katiafill.bookings.airport.model.Airport;
@@ -25,12 +26,12 @@ public class AirportController {
     }
 
     @PostMapping
-    public Airport createAirport(@RequestBody Airport airport) {
+    public Airport createAirport(@Valid @RequestBody Airport airport) {
         return service.createAirport(airport);
     }
 
     @PutMapping
-    public Airport updateAirport(@RequestBody Airport airport) {
+    public Airport updateAirport(@Valid @RequestBody Airport airport) {
         return service.updateAirport(airport);
     }
 
