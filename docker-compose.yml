@@ -1,0 +1,41 @@
+services:
+  aircraftservice:
+    image: aircraft-service:latest
+    environment:
+      DATABASE_SERVER_PORT: "5432"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+  database:
+    image: postgres:16.2
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB:       ${DB_NAME}
+    volumes:
+      - ${VOLUME_PATH}:/var/lib/postgresql/data
+      - ./src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      backend:
+        aliases:
+          - "database"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  backend:
+    driver: bridge
