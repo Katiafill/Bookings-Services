@@ -91,7 +91,7 @@ class SeatServiceTest {
         assertEquals(seatList.size(), 1);
         assertEquals(seatList.get(0), actual);
 
-        verify(repository, times(1)).findAllByAircraftCodeAndFareConditions(any(), any());
+        verify(repository, times(1)).findAllByAircraftCodeAndFareConditions(actual.getAircraftCode(), conditions);
     }
 
     @Test
