@@ -16,7 +16,7 @@ dependencies {
     implementation(libs.starterJPA)
     implementation(libs.starterWeb)
     implementation(libs.starterAOP)
-    runtimeOnly(libs.database)
+    implementation(libs.database)
     implementation(libs.hibernateUtils)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
