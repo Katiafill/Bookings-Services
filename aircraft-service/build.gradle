@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.5'
-    id 'io.spring.dependency-management' version '1.1.4'
+    alias(libs.plugins.springboot)
+    alias(libs.plugins.springDependencyManagement)
 }
 
 group = 'ru.katiafill.bookings'
@@ -12,17 +12,17 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
-    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.5'
-    implementation 'org.modelmapper:modelmapper:3.2.0'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation(libs.starterActuator)
+    implementation(libs.starterJPA)
+    implementation(libs.starterWeb)
+    implementation(libs.starterAOP)
+    runtimeOnly(libs.database)
+    implementation(libs.hibernateUtils)
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
+    testImplementation(libs.starterTest)
+    testRuntimeOnly(libs.junit)
 }
 
 test {

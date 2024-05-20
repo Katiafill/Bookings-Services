@@ -1,0 +1,18 @@
+[versions]
+hibernateUtilsVersion = "3.7.5"
+
+[libraries]
+lombok = { module = "org.projectlombok:lombok"}
+database = { module = "org.postgresql:postgresql" }
+hibernateUtils = { module = "io.hypersistence:hypersistence-utils-hibernate-63", version.ref = "hibernateUtilsVersion"}
+
+starterActuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+starterJPA = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+starterWeb = { module = "org.springframework.boot:spring-boot-starter-web" }
+starterAOP = { module = "org.springframework.boot:spring-boot-starter-aop" }
+starterTest = { module = "org.springframework.boot:spring-boot-starter-test" }
+junit = { module = "org.junit.platform:junit-platform-launcher" }
+
+[plugins]
+springboot = { id = "org.springframework.boot", version = "3.2.5"}
+springDependencyManagement = { id = "io.spring.dependency-management", version = "1.1.4"}
