@@ -26,28 +26,28 @@ public class Airport {
 
     @Id
     @Column(name = "airport_code", length = 3, nullable = false)
-    @NotNull
-    @Size(min = 3, max = 3, message = "Airport code must be 3 length characters.")
+    @NotNull(message = "{airport.errors.code.notnull}")
+    @Size(min = 3, max = 3, message = "{airport.errors.code.size}")
     private String code;
 
     @Column(name = "airport_name", nullable = false)
     @Type(JsonBinaryType.class)
-    @NotNull
+    @NotNull(message = "{airport.errors.name.notnull}")
     @Valid
     private LocalizedString name;
 
     @Column(nullable = false)
     @Type(JsonBinaryType.class)
-    @NotNull
+    @NotNull(message = "{airport.errors.city.notnull}")
     @Valid
     private LocalizedString city;
 
     @Column(nullable = false)
     @Type(PointType.class)
-    @NotNull
+    @NotNull(message = "{airport.errors.coordinates.notnull}")
     private Point coordinates;
 
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(message = "{airport.errors.timezone.notnull}")
     private String timezone;
 }

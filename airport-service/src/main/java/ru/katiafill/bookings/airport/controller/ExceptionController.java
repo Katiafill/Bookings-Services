@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,12 +18,16 @@ import ru.katiafill.bookings.airport.exception.ResourceAlreadyExistsException;
 import ru.katiafill.bookings.airport.exception.ResourceNotFoundException;
 
 import java.security.SecureRandom;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 @Slf4j
 public class ExceptionController {
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Data
     public static class ResponseError {
@@ -67,7 +73,9 @@ public class ExceptionController {
                 .collect(Collectors.toMap(
                         e -> ((FieldError)e).getField(),
                         e -> e.getDefaultMessage()));
-        return new ResponseEntity<>(new ResponseError("Validation error", errors), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseError(
+                messageSource.getMessage("validation.error", null, Locale.getDefault()), errors),
+                HttpStatus.BAD_REQUEST);
     }
 
 }
