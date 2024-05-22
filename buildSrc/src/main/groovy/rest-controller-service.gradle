@@ -1,0 +1,10 @@
+dependencies {
+    implementation(libs.starterClientConfig)
+    implementation(libs.starterValidation)
+    implementation(libs.starterJPA)
+    implementation(libs.starterWeb)
+    implementation(libs.starterAOP)
+
+    runtimeOnly(libs.database)
+    implementation(libs.hibernateUtils)
+}

@@ -1,44 +1,6 @@
 plugins {
-    id 'java'
-    alias(libs.plugins.springboot)
-    alias(libs.plugins.springDependencyManagement)
-}
-
-group = 'ru.katiafill.bookings'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
-ext {
-    set('springCloudVersion', "2023.0.1")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-dependencies {
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation(libs.starterActuator)
-    implementation(libs.starterJPA)
-    implementation(libs.starterWeb)
-    implementation(libs.starterAOP)
-    implementation(libs.database)
-    implementation(libs.hibernateUtils)
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
-
-    testImplementation(libs.starterTest)
-    testRuntimeOnly(libs.junit)
-}
-
-test {
-    useJUnitPlatform()
+    id 'all-spring-boot-services'
+    id 'rest-controller-service'
 }
 
 springBoot {
@@ -47,4 +9,9 @@ springBoot {
 
 bootBuildImage {
     imageName = "bookings-service/airport-service"
+}
+
+dependencies {
+    // Чтобы импортировать org.postgresql.geometric.PGpoint
+    implementation(libs.database)
 }
