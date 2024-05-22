@@ -10,3 +10,6 @@ spring:
     properties:
       hibernate:
         default_schema: test
+  cloud:
+    config:
+      enabled: false

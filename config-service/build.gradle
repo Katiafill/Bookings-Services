@@ -31,3 +31,7 @@ dependencyManagement {
 test {
     useJUnitPlatform()
 }
+
+bootBuildImage {
+    imageName = "bookings-service/config-service"
+}

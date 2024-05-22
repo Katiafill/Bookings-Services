@@ -1,28 +1,38 @@
 services:
+  configserver:
+    image: bookings-service/config-service:latest
+    ports:
+      - "8071:8071"
+    networks:
+      backend:
+        aliases:
+          - "configserver"
   aircraft-service:
-    image: aircraft-service:latest
+    image: bookings-service/aircraft-service:latest
     environment:
-      DATABASE_SERVER_PORT: "5432"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SERVER_PORT: "8080"
+      SPRING_DATASOURCE_URL: " jdbc:postgresql://database:5432/demo"
     depends_on:
       database:
         condition: service_healthy
+      configserver:
+        condition: service_started
     ports:
       - "8080:8080"
     networks:
       - backend
   airport-service:
-    image: airport-service:latest
+    image: bookings-service/airport-service:latest
     environment:
-      DATABASE_SERVER_PORT: "5432"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SERVER_PORT: "8081"
+      SPRING_DATASOURCE_URL: " jdbc:postgresql://database:5432/demo"
     depends_on:
       database:
         condition: service_healthy
+      configserver:
+        condition: service_started
     ports:
       - "8081:8081"
     networks:

@@ -11,7 +11,18 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    set('springCloudVersion', "2023.0.1")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation(libs.starterActuator)
     implementation(libs.starterJPA)
     implementation(libs.starterWeb)
@@ -27,4 +38,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+bootBuildImage {
+    imageName = "bookings-service/aircraft-service"
 }
