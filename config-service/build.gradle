@@ -6,6 +6,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-config-server'
 }
 
-bootBuildImage {
-    imageName = "bookings-service/config-service"
+springBoot {
+    mainClass = 'ru.katiafill.bookings.config.ConfigServiceApplication'
 }
+

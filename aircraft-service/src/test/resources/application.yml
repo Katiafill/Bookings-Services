@@ -1,15 +1,7 @@
 spring:
   application:
     name: aircraft-service
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/demo
-    username: postgres
-    password: postgres
-  jpa:
-    properties:
-      hibernate:
-        default_schema: test
-  cloud:
-    config:
-      enabled: false
+  profiles:
+    active: test
+  config:
+    import: optional:configserver:http://localhost:8071

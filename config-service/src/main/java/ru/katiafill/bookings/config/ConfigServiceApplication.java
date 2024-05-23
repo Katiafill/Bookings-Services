@@ -1,4 +1,4 @@
-package ru.katiafill.bookings;
+package ru.katiafill.bookings.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

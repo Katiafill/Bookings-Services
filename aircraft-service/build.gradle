@@ -3,6 +3,6 @@ plugins {
     id 'rest-controller-service'
 }
 
-bootBuildImage {
-    imageName = "bookings-service/aircraft-service"
+springBoot {
+    mainClass = 'ru.katiafill.bookings.aircraft.AircraftServiceApplication'
 }

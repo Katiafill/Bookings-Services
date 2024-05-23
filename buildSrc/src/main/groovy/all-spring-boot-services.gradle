@@ -32,3 +32,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+bootBuildImage {
+    imageName = "bookings-service/${project.name}"
+}

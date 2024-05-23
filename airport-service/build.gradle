@@ -7,10 +7,6 @@ springBoot {
     mainClass = 'ru.katiafill.bookings.airport.AirportServiceApplication'
 }
 
-bootBuildImage {
-    imageName = "bookings-service/airport-service"
-}
-
 dependencies {
     // Чтобы импортировать org.postgresql.geometric.PGpoint
     implementation(libs.database)
