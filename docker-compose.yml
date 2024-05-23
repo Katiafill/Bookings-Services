@@ -1,8 +1,16 @@
 services:
   configserver:
     image: bookings-service/config-service:latest
+    environment:
+      VAULT_TOKEN: dev-only-token
+      VAULT_HOST: vault
     ports:
       - "8071:8071"
+    depends_on:
+      vault:
+        condition: service_healthy
+      vault-configure:
+        condition: service_completed_successfully
     networks:
       backend:
         aliases:
@@ -18,6 +26,8 @@ services:
         condition: service_healthy
       configserver:
         condition: service_started
+      vault:
+        condition: service_started
     ports:
       - "8080:8080"
     networks:
@@ -32,6 +42,8 @@ services:
       database:
         condition: service_healthy
       configserver:
+        condition: service_started
+      vault:
         condition: service_started
     ports:
       - "8081:8081"
@@ -59,7 +71,40 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+  vault:
+    image: hashicorp/vault:latest
+    restart: always
+    entrypoint: vault server -dev -dev-listen-address=0.0.0.0:8200
+    environment:
+      VAULT_TOKEN: dev-only-token
+      VAULT_ADDR: http://vault:8200
+      VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      test: [ "CMD", "vault", "status" ]
+    networks:
+      backend:
+        aliases:
+          - "vault"
+  vault-configure:
+    image: hashicorp/vault:latest
+    volumes:
+      - ./buildSrc/src/main/resources/vault.sh:/scripts/vault.sh
+    command: sh /scripts/vault.sh
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
+      VAULT_TOKEN: dev-only-token
+      VAULT_ADDR: http://vault:8200
+    cap_add:
+      - IPC_LOCK
+    depends_on:
+      vault:
+        condition: service_healthy
+    networks:
+      - backend
 networks:
   backend:
     driver: bridge

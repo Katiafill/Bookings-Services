@@ -2,11 +2,20 @@ spring:
   application:
     name: config-server
   profiles:
-    active: git
+    active: git, vault
   cloud:
     config:
       server:
+        vault:
+          order: 1
+          backend: bookings-services
+          host: ${VAULT_HOST:localhost}
+          port: 8200
+          scheme: http
+          kvVersion: 2
+          token: ${VAULT_TOKEN:dev-only-token}
         git:
+          order: 2
           uri: https://github.com/Katiafill/bookings-services-config.git
 server:
   port: 8071
