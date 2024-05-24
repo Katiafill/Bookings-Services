@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/airport-service" />
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/config-service" />
+            <option value="$PROJECT_DIR$/eureka-service" />
           </set>
         </option>
       </GradleProjectSettings>

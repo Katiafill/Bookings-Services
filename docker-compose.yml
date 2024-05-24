@@ -1,5 +1,5 @@
 services:
-  configserver:
+  config-server:
     image: bookings-service/config-service:latest
     environment:
       VAULT_TOKEN: dev-only-token
@@ -14,17 +14,18 @@ services:
     networks:
       backend:
         aliases:
-          - "configserver"
+          - "config-server"
   aircraft-service:
     image: bookings-service/aircraft-service:latest
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
       SERVER_PORT: "8080"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/demo"
+      EUREKA_SERVER: "http://eureka-server:8070/eureka/"
     depends_on:
       database:
         condition: service_healthy
-      configserver:
+      config-server:
         condition: service_started
       vault:
         condition: service_started
@@ -35,13 +36,14 @@ services:
   airport-service:
     image: bookings-service/airport-service:latest
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
       SERVER_PORT: "8081"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/demo"
+      EUREKA_SERVER: "http://eureka-server:8070/eureka/"
     depends_on:
       database:
         condition: service_healthy
-      configserver:
+      config-server:
         condition: service_started
       vault:
         condition: service_started
@@ -105,6 +107,21 @@ services:
         condition: service_healthy
     networks:
       - backend
+  eureka-server:
+    image: bookings-service/eureka-service:latest
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+    ports:
+      - "8070:8070"
+    depends_on:
+      database:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "eureka-server"
 networks:
   backend:
     driver: bridge

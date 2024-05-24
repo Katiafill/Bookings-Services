@@ -1,0 +1,12 @@
+plugins {
+    id 'all-spring-boot-services'
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+    implementation(libs.starterClientConfig)
+}
+
+springBoot {
+    mainClass = 'ru.katiafill.bookings.eureka.EurekaServiceApplication'
+}

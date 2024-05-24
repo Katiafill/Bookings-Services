@@ -4,6 +4,7 @@ dependencies {
     implementation(libs.starterJPA)
     implementation(libs.starterWeb)
     implementation(libs.starterAOP)
+    implementation(libs.starterEurekaClient)
 
     runtimeOnly(libs.database)
     implementation(libs.hibernateUtils)

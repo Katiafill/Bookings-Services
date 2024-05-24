@@ -15,6 +15,7 @@ starterValidation = { module = "org.springframework.boot:spring-boot-starter-val
 
 # org.springframework.cloud
 starterClientConfig = { module = "org.springframework.cloud:spring-cloud-starter-config" }
+starterEurekaClient = { module = "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client" }
 
 # tests
 starterTest = { module = "org.springframework.boot:spring-boot-starter-test" }
