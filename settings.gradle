@@ -3,4 +3,5 @@ include 'aircraft-service'
 include 'airport-service'
 include 'config-service'
 include 'eureka-service'
+include 'flight-service'
 

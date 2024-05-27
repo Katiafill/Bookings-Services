@@ -1,0 +1,8 @@
+plugins {
+    id 'all-spring-boot-services'
+    id 'rest-controller-service'
+}
+
+springBoot {
+    mainClass = 'ru.katiafill.bookings.flight.FlightServiceApplication'
+}

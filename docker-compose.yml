@@ -53,6 +53,24 @@ services:
       - "8081:8081"
     networks:
       - backend
+  flight-service:
+    image: bookings-service/flight-service:latest
+    environment:
+      CONFIG_SERVER: "http://config-server:8071"
+      SERVER_PORT: "8082"
+      DATABASE_SERVER: "database:5432/demo"
+      EUREKA_SERVER: "http://eureka-server:8070/eureka/"
+    depends_on:
+      database:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      vault:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    networks:
+      - backend
   database:
     image: postgres:16.2
     ports:
