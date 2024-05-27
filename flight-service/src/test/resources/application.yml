@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: flight-service
+  profiles:
+    active: test
+  config:
+    import: optional:configserver:${CONFIG_SERVER:http://localhost:8071}
