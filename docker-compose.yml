@@ -1,9 +1,11 @@
 services:
   config-server:
     image: bookings-service/config-service:latest
+    env_file:
+      - .env
     environment:
-      VAULT_TOKEN: dev-only-token
       VAULT_HOST: vault
+      SERVER_PORT: "8071"
     ports:
       - "8071:8071"
     depends_on:
@@ -18,9 +20,9 @@ services:
   aircraft-service:
     image: bookings-service/aircraft-service:latest
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
       SERVER_PORT: "8080"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/demo"
+      CONFIG_SERVER: "http://config-server:8071"
+      DATABASE_SERVER: "database:5432/demo"
       EUREKA_SERVER: "http://eureka-server:8070/eureka/"
     depends_on:
       database:
@@ -28,7 +30,7 @@ services:
       config-server:
         condition: service_started
       vault:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8080:8080"
     networks:
@@ -36,9 +38,9 @@ services:
   airport-service:
     image: bookings-service/airport-service:latest
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+      CONFIG_SERVER: "http://config-server:8071"
       SERVER_PORT: "8081"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/demo"
+      DATABASE_SERVER: "database:5432/demo"
       EUREKA_SERVER: "http://eureka-server:8070/eureka/"
     depends_on:
       database:
@@ -46,7 +48,7 @@ services:
       config-server:
         condition: service_started
       vault:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8081:8081"
     networks:
@@ -57,12 +59,8 @@ services:
       - "5432:5432"
     env_file:
       - .env
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB:       ${DB_NAME}
     volumes:
-      - ${VOLUME_PATH}:/var/lib/postgresql/data
+      - ${DATABASE_VOLUME_PATH}:/var/lib/postgresql/data
       - ./buildSrc/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       backend:
@@ -77,14 +75,16 @@ services:
     image: hashicorp/vault:latest
     restart: always
     entrypoint: vault server -dev -dev-listen-address=0.0.0.0:8200
+    env_file:
+      - .env
     environment:
-      VAULT_TOKEN: dev-only-token
       VAULT_ADDR: http://vault:8200
-      VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
     ports:
       - "8200:8200"
     cap_add:
       - IPC_LOCK
+    volumes:
+      - ${VAULT_VOLUME_PATH}:/vault/file
     healthcheck:
       test: [ "CMD", "vault", "status" ]
     networks:
@@ -96,9 +96,9 @@ services:
     volumes:
       - ./buildSrc/src/main/resources/vault.sh:/scripts/vault.sh
     command: sh /scripts/vault.sh
+    env_file:
+      - .env
     environment:
-      VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
-      VAULT_TOKEN: dev-only-token
       VAULT_ADDR: http://vault:8200
     cap_add:
       - IPC_LOCK
@@ -110,12 +110,11 @@ services:
   eureka-server:
     image: bookings-service/eureka-service:latest
     environment:
-      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8071"
+      CONFIG_SERVER: "http://config-server:8071"
+      EUREKA_HOST: "eureka-server"
     ports:
       - "8070:8070"
     depends_on:
-      database:
-        condition: service_healthy
       config-server:
         condition: service_started
     networks:
