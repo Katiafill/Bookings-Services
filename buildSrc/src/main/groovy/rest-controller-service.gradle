@@ -1,10 +1,12 @@
 dependencies {
+    implementation(libs.starterActuator)
     implementation(libs.starterClientConfig)
     implementation(libs.starterValidation)
     implementation(libs.starterJPA)
     implementation(libs.starterWeb)
-    implementation(libs.starterAOP)
     implementation(libs.starterEurekaClient)
+
+    implementation project(":shared")
 
     runtimeOnly(libs.database)
     implementation(libs.hibernateUtils)

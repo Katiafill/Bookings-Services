@@ -21,7 +21,6 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation(libs.starterActuator)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
 

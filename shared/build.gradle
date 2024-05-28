@@ -1,0 +1,15 @@
+plugins {
+    id 'all-spring-boot-services'
+}
+
+dependencies {
+    implementation(libs.starterAOP)
+}
+
+bootBuildImage {
+    enabled = false
+}
+
+bootJar {
+    enabled = false
+}

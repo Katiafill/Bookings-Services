@@ -1,4 +1,4 @@
-package ru.katiafill.bookings.aircraft.aspect;
+package ru.katiafill.bookings.shared.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
