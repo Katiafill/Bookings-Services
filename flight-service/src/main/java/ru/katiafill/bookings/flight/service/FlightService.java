@@ -1,8 +1,8 @@
 package ru.katiafill.bookings.flight.service;
 
-import ru.katiafill.bookings.flight.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.flight.model.Flight;
 import ru.katiafill.bookings.flight.model.FlightStatus;
+import ru.katiafill.bookings.shared.exception.ResourceNotFoundException;
 
 import java.time.ZonedDateTime;
 import java.util.List;

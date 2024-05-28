@@ -12,7 +12,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @RefreshScope
 @ComponentScan(basePackages = {
         "ru.katiafill.bookings.airport.*",
-        "ru.katiafill.bookings.shared.aspect"
+        "ru.katiafill.bookings.shared.*"
 })
 public class AirportServiceApplication {
 

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableFeignClients
 @ComponentScan(basePackages = {
         "ru.katiafill.bookings.flight.*",
-        "ru.katiafill.bookings.shared.aspect"
+        "ru.katiafill.bookings.shared.*"
 })
 public class FlightServiceApplication {
 

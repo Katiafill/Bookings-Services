@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
-import ru.katiafill.bookings.aircraft.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.aircraft.model.Aircraft;
 import ru.katiafill.bookings.aircraft.repository.AircraftRepository;
+import ru.katiafill.bookings.shared.exception.ResourceAlreadyExistsException;
+import ru.katiafill.bookings.shared.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;

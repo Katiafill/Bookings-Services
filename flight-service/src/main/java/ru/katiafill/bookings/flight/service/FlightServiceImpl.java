@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.katiafill.bookings.flight.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.flight.model.Aircraft;
 import ru.katiafill.bookings.flight.model.Airport;
 import ru.katiafill.bookings.flight.model.Flight;
@@ -12,6 +11,7 @@ import ru.katiafill.bookings.flight.model.FlightStatus;
 import ru.katiafill.bookings.flight.repository.FlightRepository;
 import ru.katiafill.bookings.flight.service.client.AircraftClient;
 import ru.katiafill.bookings.flight.service.client.AirportClient;
+import ru.katiafill.bookings.shared.exception.ResourceNotFoundException;
 
 import java.time.ZonedDateTime;
 import java.util.List;

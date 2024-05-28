@@ -3,6 +3,8 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.starterWeb)
+    implementation(libs.starterValidation)
     implementation(libs.starterAOP)
 }
 

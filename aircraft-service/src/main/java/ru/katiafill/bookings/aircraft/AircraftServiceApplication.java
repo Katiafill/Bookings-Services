@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 @RefreshScope
 @ComponentScan(basePackages = {
         "ru.katiafill.bookings.aircraft.*",
-        "ru.katiafill.bookings.shared.aspect"
+        "ru.katiafill.bookings.shared.*"
 })
 public class AircraftServiceApplication {
 

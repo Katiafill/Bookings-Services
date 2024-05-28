@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
-import ru.katiafill.bookings.aircraft.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.aircraft.model.FareConditions;
 import ru.katiafill.bookings.aircraft.model.Seat;
 import ru.katiafill.bookings.aircraft.repository.SeatRepository;
+import ru.katiafill.bookings.shared.exception.ResourceAlreadyExistsException;
+import ru.katiafill.bookings.shared.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Map;

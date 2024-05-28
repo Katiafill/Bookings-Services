@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.katiafill.bookings.airport.exception.ResourceAlreadyExistsException;
-import ru.katiafill.bookings.airport.exception.ResourceNotFoundException;
+import ru.katiafill.bookings.shared.exception.ResourceAlreadyExistsException;
+import ru.katiafill.bookings.shared.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.airport.model.Airport;
 import ru.katiafill.bookings.airport.repository.AirportRepository;
 

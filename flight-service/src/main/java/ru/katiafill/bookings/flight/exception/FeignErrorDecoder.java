@@ -3,7 +3,8 @@ package ru.katiafill.bookings.flight.exception;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import ru.katiafill.bookings.flight.controller.ExceptionController;
+import ru.katiafill.bookings.shared.exception.ResourceNotFoundException;
+import ru.katiafill.bookings.shared.exception.ResponseError;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
     private static Optional<String> getResponseErrorMessage(Response response) {
         try (InputStream inputStream = response.body().asInputStream()) {
             ObjectMapper mapper = new ObjectMapper();
-            ExceptionController.ResponseError responseError = mapper.readValue(inputStream, ExceptionController.ResponseError.class);
+            ResponseError responseError = mapper.readValue(inputStream, ResponseError.class);
             return Optional.of(responseError.getMessage());
         } catch (IOException e) {
             return Optional.empty();

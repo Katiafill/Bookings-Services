@@ -1,8 +1,8 @@
 package ru.katiafill.bookings.aircraft.service;
 
-import ru.katiafill.bookings.aircraft.exception.ResourceAlreadyExistsException;
-import ru.katiafill.bookings.aircraft.exception.ResourceNotFoundException;
 import ru.katiafill.bookings.aircraft.model.Aircraft;
+import ru.katiafill.bookings.shared.exception.ResourceAlreadyExistsException;
+import ru.katiafill.bookings.shared.exception.ResourceNotFoundException;
 
 import java.util.List;
 
