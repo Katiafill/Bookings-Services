@@ -5,6 +5,4 @@ spring:
     active: dev
   config:
     import: optional:configserver:${CONFIG_SERVER:http://localhost:8071}
-  cloud:
-    loadbalancer:
-      enabled: false
+    fail-fast: true

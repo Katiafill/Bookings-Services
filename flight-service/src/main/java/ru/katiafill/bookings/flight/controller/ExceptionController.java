@@ -2,6 +2,7 @@ package ru.katiafill.bookings.flight.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -27,6 +28,7 @@ public class ExceptionController {
     private MessageSource messageSource;
 
     @Data
+    @NoArgsConstructor
     public static class ResponseError {
         private String message;
         @JsonInclude(JsonInclude.Include.NON_EMPTY)

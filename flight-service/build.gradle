@@ -3,6 +3,10 @@ plugins {
     id 'rest-controller-service'
 }
 
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+}
+
 springBoot {
     mainClass = 'ru.katiafill.bookings.flight.FlightServiceApplication'
 }

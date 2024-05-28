@@ -1,12 +1,17 @@
 package ru.katiafill.bookings.flight.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.katiafill.bookings.flight.exception.ResourceNotFoundException;
+import ru.katiafill.bookings.flight.model.Aircraft;
+import ru.katiafill.bookings.flight.model.Airport;
 import ru.katiafill.bookings.flight.model.Flight;
 import ru.katiafill.bookings.flight.model.FlightStatus;
 import ru.katiafill.bookings.flight.repository.FlightRepository;
+import ru.katiafill.bookings.flight.service.client.AircraftClient;
+import ru.katiafill.bookings.flight.service.client.AirportClient;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -14,8 +19,12 @@ import java.util.List;
 @Service
 @Transactional
 @AllArgsConstructor
+@Slf4j
 public class FlightServiceImpl implements FlightService {
     private final FlightRepository repository;
+
+    private final AircraftClient aircraftClient;
+    private final AirportClient airportClient;
 
     @Override
     public List<Flight> getFlightsByFlightNo(String flightNo) {
@@ -37,6 +46,11 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Flight createFlight(Flight flight) {
         flight.setId(null);
+        Aircraft aircraft = aircraftClient.getAircraft(flight.getAircraftCode());
+        log.info("Aircraft: {}", aircraft);
+        Airport departureAirport = airportClient.getAirport(flight.getDepartureAirportCode());
+        Airport arrivalAirport = airportClient.getAirport(flight.getArrivalAirportCode());
+        log.info("Departure airport: {}, arrival airport: {}", departureAirport, arrivalAirport);
         return repository.save(flight);
     }
 
