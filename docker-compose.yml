@@ -139,6 +139,21 @@ services:
       backend:
         aliases:
           - "eureka-server"
+  gateway-server:
+    image: bookings-service/gateway-service:latest
+    environment:
+      CONFIG_SERVER: "http://config-server:8071"
+      EUREKA_SERVER: "http://eureka-server:8070/eureka/"
+      SERVER_PORT: "8072"
+    ports:
+      - "8072:8072"
+    depends_on:
+      config-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "gateway-server"
 networks:
   backend:
     driver: bridge

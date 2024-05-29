@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/config-service" />
             <option value="$PROJECT_DIR$/eureka-service" />
             <option value="$PROJECT_DIR$/flight-service" />
+            <option value="$PROJECT_DIR$/gateway-service" />
             <option value="$PROJECT_DIR$/shared" />
           </set>
         </option>

@@ -5,4 +5,5 @@ include 'config-service'
 include 'eureka-service'
 include 'flight-service'
 include 'shared'
+include 'gateway-service'
 
