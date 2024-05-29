@@ -22,9 +22,8 @@ import java.util.List;
 @Slf4j
 public class FlightServiceImpl implements FlightService {
     private final FlightRepository repository;
+    private final FlightCheckService checkService;
 
-    private final AircraftClient aircraftClient;
-    private final AirportClient airportClient;
 
     @Override
     public List<Flight> getFlightsByFlightNo(String flightNo) {
@@ -45,17 +44,14 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public Flight createFlight(Flight flight) {
+        checkService.check(flight);
         flight.setId(null);
-        Aircraft aircraft = aircraftClient.getAircraft(flight.getAircraftCode());
-        log.info("Aircraft: {}", aircraft);
-        Airport departureAirport = airportClient.getAirport(flight.getDepartureAirportCode());
-        Airport arrivalAirport = airportClient.getAirport(flight.getArrivalAirportCode());
-        log.info("Departure airport: {}, arrival airport: {}", departureAirport, arrivalAirport);
         return repository.save(flight);
     }
 
     @Override
     public Flight updateFlight(Flight flight) throws ResourceNotFoundException {
+        checkService.check(flight);
         return repository.save(flight);
     }
 

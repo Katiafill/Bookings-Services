@@ -1,5 +1,8 @@
 package ru.katiafill.bookings.flight.model;
 
+import lombok.Getter;
+
+@Getter
 public enum FlightStatus {
     ON_TIME("On Time"),
     DELAYED("Delayed"),
@@ -14,7 +17,4 @@ public enum FlightStatus {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 }

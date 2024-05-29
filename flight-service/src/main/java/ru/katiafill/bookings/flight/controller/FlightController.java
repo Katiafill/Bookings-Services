@@ -1,5 +1,6 @@
 package ru.katiafill.bookings.flight.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.katiafill.bookings.flight.model.Flight;
@@ -30,12 +31,12 @@ public class FlightController {
     }
 
     @PostMapping
-    public Flight createFlight(@RequestBody Flight flight) {
+    public Flight createFlight(@Valid @RequestBody Flight flight) {
         return service.createFlight(flight);
     }
 
     @PutMapping
-    public Flight updateFlight(@RequestBody Flight flight) {
+    public Flight updateFlight(@Valid @RequestBody Flight flight) {
         return service.updateFlight(flight);
     }
 

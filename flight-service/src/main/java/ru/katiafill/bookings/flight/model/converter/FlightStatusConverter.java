@@ -1,7 +1,8 @@
-package ru.katiafill.bookings.flight.model;
+package ru.katiafill.bookings.flight.model.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import ru.katiafill.bookings.flight.model.FlightStatus;
 
 import java.util.stream.Stream;
 
