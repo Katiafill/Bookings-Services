@@ -1,5 +1,7 @@
 package ru.katiafill.bookings.flight.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +62,8 @@ class FlightCheckService {
         }
     }
 
+    @CircuitBreaker(name = "aircraftService")
+    @Retry(name = "retryAircraftService")
     Aircraft getAircraft(@NotNull String aircraftCode) throws InvalidFlightRequestException {
         try {
             Aircraft aircraft = aircraftClient.getAircraft(aircraftCode);
@@ -70,6 +74,8 @@ class FlightCheckService {
         }
     }
 
+    @CircuitBreaker(name = "airportService")
+    @Retry(name = "retryAirportService")
     Airport getAirport(@NotNull String airportCode) throws InvalidFlightRequestException {
         try {
             Airport airport = airportClient.getAirport(airportCode);
