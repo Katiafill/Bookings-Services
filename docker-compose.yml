@@ -20,7 +20,7 @@ services:
   aircraft-service:
     image: bookings-service/aircraft-service:latest
     environment:
-      SERVER_PORT: "8080"
+      SERVER_PORT: "8083"
       CONFIG_SERVER: "http://config-server:8071"
       DATABASE_SERVER: "database:5432/demo"
       EUREKA_SERVER: "http://eureka-server:8070/eureka/"
@@ -32,7 +32,7 @@ services:
       vault:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8083:8083"
     networks:
       - backend
   airport-service:
@@ -154,6 +154,19 @@ services:
       backend:
         aliases:
           - "gateway-server"
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    restart: always
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    networks:
+      backend:
+        aliases:
+          - "keycloak"
 networks:
   backend:
     driver: bridge

@@ -6,3 +6,8 @@ plugins {
 springBoot {
     mainClass = 'ru.katiafill.bookings.aircraft.AircraftServiceApplication'
 }
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+}
