@@ -1,35 +1,42 @@
 package ru.katiafill.bookings.aircraft.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CustomJwtGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+    private final JwtAuthorizationProperties properties;
+
     @Override
     public Collection<GrantedAuthority> convert(Jwt source) {
-        Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
+        return getRoles(source)
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(properties.getPrefixRole() + role))
+                .collect(Collectors.toSet());
+    }
 
-        Map<String, Map<String, List<String>>> resourceAccess = source.getClaim("resource_access");
+    private List<String> getRoles(Jwt source) {
+        Map<String, Map<String, List<String>>> resourceAccess = getResourceAccess(source);
+        Map<String, List<String>> bookings = getBookings(resourceAccess);
+        List<String> roles = bookings.get(properties.getClaimRoles());
+        return roles != null ? roles : List.of();
+    }
 
-        if (resourceAccess != null && !resourceAccess.isEmpty()) {
-            resourceAccess.forEach((resource, resourceClaims) -> {
-                if (resource.equals("bookings")) {
-                    resourceClaims.get("roles").forEach(role -> {
-                        mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                    });
-                }
-            });
-        }
+    private Map<String, List<String>> getBookings(Map<String, Map<String, List<String>>> resourceAccess) {
+        Map<String, List<String>> bookings = resourceAccess.get(properties.getClaimRealmName());
+        return bookings != null ? bookings : Map.of();
+    }
 
-        log.info("Authorities: {}", mappedAuthorities);
-        return mappedAuthorities;
+    private Map<String, Map<String, List<String>>> getResourceAccess(Jwt source) {
+        Map<String, Map<String, List<String>>> resourceAccess = source.getClaim(properties.getClaimResourceAccess());
+        return resourceAccess != null ? resourceAccess : Map.of();
     }
 }

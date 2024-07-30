@@ -14,10 +14,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig  {
 
     @Bean
+    public JwtAuthorizationProperties jwtAuthorizationProperties() {
+        return new JwtAuthorizationProperties();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(authorize ->
-                        authorize.anyRequest()
-                                .authenticated())
+        return http.authorizeHttpRequests(authorize -> authorize
+                        .anyRequest()
+                        .authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(
                         jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
                 ))
@@ -27,7 +32,8 @@ public class SecurityConfig  {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter());
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(
+                new CustomJwtGrantedAuthoritiesConverter(jwtAuthorizationProperties()));
         return jwtAuthenticationConverter;
     }
 }
