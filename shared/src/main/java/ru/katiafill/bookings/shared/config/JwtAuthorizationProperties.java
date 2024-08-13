@@ -1,4 +1,4 @@
-package ru.katiafill.bookings.aircraft.config;
+package ru.katiafill.bookings.shared.config;
 
 import lombok.Getter;
 import lombok.Setter;

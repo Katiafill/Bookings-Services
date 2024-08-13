@@ -1,12 +1,15 @@
-package ru.katiafill.bookings.aircraft.config;
+package ru.katiafill.bookings.shared.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 @Configuration
 @EnableWebSecurity
@@ -35,5 +38,12 @@ public class SecurityConfig  {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(
                 new CustomJwtGrantedAuthoritiesConverter(jwtAuthorizationProperties()));
         return jwtAuthenticationConverter;
+    }
+
+    @Bean
+    public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+        return new RegisterSessionAuthenticationStrategy(
+                new SessionRegistryImpl()
+        );
     }
 }
