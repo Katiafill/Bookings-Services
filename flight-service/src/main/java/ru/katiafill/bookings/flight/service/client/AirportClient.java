@@ -5,12 +5,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.katiafill.bookings.flight.exception.FeignErrorDecoder;
+import ru.katiafill.bookings.flight.filter.AuthFeignConfig;
 import ru.katiafill.bookings.flight.model.Airport;
 
 import java.util.List;
 
 @FeignClient(name = "airport-service",
-        configuration = {FeignErrorDecoder.class})
+        configuration = {FeignErrorDecoder.class, AuthFeignConfig.class})
 public interface AirportClient {
     @RequestMapping(value = "/api/airport", method = RequestMethod.GET)
     List<Airport> getAirports();

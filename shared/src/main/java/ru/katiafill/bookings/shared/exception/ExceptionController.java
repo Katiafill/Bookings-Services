@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +50,14 @@ public class ExceptionController {
         return new ResponseEntity<>(new ResponseError(
                 messageSource.getMessage("validation.error", null, Locale.getDefault()), errors),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ResponseError> handleAccessDeniedExceptions(AccessDeniedException ex) {
+        return new ResponseEntity<>(
+                new ResponseError(ex.getLocalizedMessage()),
+                HttpStatus.FORBIDDEN
+        );
     }
 
 }
