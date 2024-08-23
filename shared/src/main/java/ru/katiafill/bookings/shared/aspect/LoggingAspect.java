@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Aspect
 @Component
@@ -26,7 +27,9 @@ public class LoggingAspect {
                 joinPoint.getSignature().getDeclaringType(),
                 joinPoint.getSignature().getName(),
                 e.getLocalizedMessage(),
-                e.getStackTrace());
+                Arrays.stream(e.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .collect(Collectors.joining("\n")));
     }
 
     @Around("springBeanPointcuts()")
