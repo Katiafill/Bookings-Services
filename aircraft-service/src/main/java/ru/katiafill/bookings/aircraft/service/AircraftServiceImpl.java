@@ -2,6 +2,7 @@ package ru.katiafill.bookings.aircraft.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.katiafill.bookings.aircraft.model.Aircraft;
@@ -20,6 +21,7 @@ public class AircraftServiceImpl implements AircraftService {
 
     private final AircraftRepository aircraftRepository;
     private final SeatService seatService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public List<Aircraft> getAircrafts() {
@@ -59,6 +61,7 @@ public class AircraftServiceImpl implements AircraftService {
             saved.setSeats(seatService.addSeats(aircraft.getSeats(), aircraft.getCode()));
         }
 
+        kafkaTemplate.send("ratings", aircraft.getCode());
         return saved;
     }
 

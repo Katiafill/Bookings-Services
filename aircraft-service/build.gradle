@@ -3,6 +3,10 @@ plugins {
     id 'rest-controller-service'
 }
 
+dependencies {
+    implementation 'org.springframework.kafka:spring-kafka'
+}
+
 springBoot {
     mainClass = 'ru.katiafill.bookings.aircraft.AircraftServiceApplication'
 }
