@@ -35,3 +35,9 @@ test {
 bootBuildImage {
     imageName = "bookings-service/${project.name}"
 }
+
+tasks.bootBuildImage {
+    docker {
+        host = "//./pipe/dockerDesktopLinuxEngine"
+    }
+}
